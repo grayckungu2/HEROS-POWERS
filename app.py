@@ -24,7 +24,7 @@ def get_heroes():
 
 
 # GET hero by ID
-#http://127.0.0.1:5000/heroes/<hero_id>
+#http://127.0.0.1:5000/heroes/<hero_>
 
 @app.route('/heroes/<int:id>', methods=['GET'])
 def get_hero(id):
