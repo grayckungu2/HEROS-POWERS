@@ -1,16 +1,16 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData  # Import MetaData
+from sqlalchemy import MetaData  
 from sqlalchemy.orm import relationship
 
-# Define metadata with naming convention
+# metadata with naming convention
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
 })
 
-# Initialize SQLAlchemy with the custom metadata
+# Initialize SQLAlchemy 
 db = SQLAlchemy(metadata=metadata)
 
-# Define the Hero model
+#  Hero model
 class Hero(db.Model):
     __tablename__ = 'hero'
 
@@ -19,11 +19,9 @@ class Hero(db.Model):
     supername = db.Column(db.String(255))
     created_at = db.Column(db.String(255))
     updated_at = db.Column(db.String(255))
-
-    # Define the relationship between Hero and HeroPower
+#relationship between Hero and HeroPower
     hero_powers = relationship("HeroPower", back_populates="hero")
-
-# Define the Power model
+# Power model
 class Power(db.Model):
     __tablename__ = 'power'
 
