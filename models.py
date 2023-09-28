@@ -31,8 +31,9 @@ class Power(db.Model):
     created_at = db.Column(db.String(255))
     updated_at = db.Column(db.String(255))
 
-    #  relationship between Power and HeroPower
+#relationship between Power and HeroPower
     power_heroes = relationship("HeroPower", back_populates="power")
+
 # HeroPower model
 class HeroPower(db.Model):
     __tablename__ = 'hero_power'
@@ -43,7 +44,8 @@ class HeroPower(db.Model):
     # foreign keys for Hero and Power
     hero_id = db.Column(db.Integer, db.ForeignKey('hero.id'), nullable=False)
     power_id = db.Column(db.Integer, db.ForeignKey('power.id'), nullable=False)
+    
 
-    #  relationships between HeroPower, Hero, and Power
+    # relationships between HeroPower, Hero, and Power
     hero = relationship("Hero", back_populates="hero_powers")
     power = relationship("Power", back_populates="power_heroes")
