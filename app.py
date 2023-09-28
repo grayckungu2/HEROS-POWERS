@@ -1,28 +1,31 @@
+
 from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import IntegrityError
+from flask_migrate import Migrate
 from models import db, Hero, Power, HeroPower
 
 app = Flask(__name__)
-
-# Configure the database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize the database
 db.init_app(app)
+migrate = Migrate(app, db)
 
-
+@app.route('/')
+def home():
+    return 'Welcome to the Superheroes API'
 
 # GET all heroes
 @app.route('/heroes', methods=['GET'])
 def get_heroes():
     heroes = Hero.query.all()
     # Convert Hero objects to a list of dictionaries
-    hero_data = [{"id": hero.id, "name": hero.name, "supername": hero.supername} for hero in heroes]
+    hero_data = [{"id": hero.id, "name": hero.name, "super_name": hero.super_name} for hero in heroes]
     return jsonify(hero_data), 200
 
+
 # GET hero by ID
+#http://127.0.0.1:5000/heroes/<hero_id>
+
 @app.route('/heroes/<int:id>', methods=['GET'])
 def get_hero(id):
     hero = Hero.query.get(id)
@@ -33,12 +36,13 @@ def get_hero(id):
     hero_data = {
         "id": hero.id,
         "name": hero.name,
-        "supername": hero.supername,
+        "super_name": hero.super_name,  
         "created_at": hero.created_at,
         "updated_at": hero.updated_at
     }
 
     return jsonify(hero_data), 200
+
 
 # GET all powers
 @app.route('/powers', methods=['GET'])
@@ -95,7 +99,9 @@ def patch_power(id):
         db.session.rollback()
         return jsonify({"errors": ["Validation errors"]}), 400
 
+
 # POST Hero power
+# url = 'http://127.0.0.1:5000/hero_powers'
 @app.route('/hero_powers', methods=['POST'])
 def post_hero_power():
     data = request.get_json()
@@ -121,7 +127,7 @@ def post_hero_power():
         hero_data = {
             "id": hero.id,
             "name": hero.name,
-            "supername": hero.supername,
+            "super_name": hero.super_name, 
             "powers": [
                 {
                     "id": power.id,
@@ -136,5 +142,4 @@ def post_hero_power():
         db.session.rollback()
         return jsonify({"errors": ["Validation errors"]}), 400
 
-if __name__ == '__main__':
-    app.run(port=5555)
+        
