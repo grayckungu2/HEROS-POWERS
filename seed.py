@@ -1,9 +1,10 @@
+from datetime import datetime
 from faker import Faker
-from models.hero import Hero, db
-from models.power import Power
-from models.heropower import HeroPower
 from sqlalchemy.exc import IntegrityError
 from app import app, db
+from models.hero import Hero
+from models.power import Power
+from models.heropower import HeroPower
 
 fake = Faker()
 
@@ -11,8 +12,8 @@ fake = Faker()
 def create_hero():
     name = fake.first_name()
     super_name = fake.first_name()
-    created_at = fake.date_time_this_decade()
-    updated_at = fake.date_time_this_decade()
+    created_at = datetime.utcnow()
+    updated_at = datetime.utcnow()
 
     hero = Hero(name=name, super_name=super_name, created_at=created_at, updated_at=updated_at)
 
@@ -22,8 +23,8 @@ def create_hero():
 def create_power():
     name = fake.word()
     description = fake.sentence()
-    created_at = fake.date_time_this_decade()
-    updated_at = fake.date_time_this_decade()
+    created_at = datetime.utcnow()
+    updated_at = datetime.utcnow()
 
     power = Power(name=name, description=description, created_at=created_at, updated_at=updated_at)
 
@@ -32,8 +33,10 @@ def create_power():
 # Function to create and add a HeroPower association with random data
 def create_hero_power(hero, power):
     strength = fake.random_int(min=1, max=10)  
+    created_at = datetime.utcnow()
+    updated_at = datetime.utcnow()
 
-    hero_power = HeroPower(strength=strength, hero=hero, power=power)
+    hero_power = HeroPower(strength=strength, hero=hero, power=power, created_at=created_at, updated_at=updated_at)
 
     return hero_power
 
@@ -42,8 +45,10 @@ def seed_database():
     for _ in range(10):  
         hero = create_hero()
         power = create_power()
-
         hero_power = create_hero_power(hero, power)
+
+        db.session.add(hero)
+        db.session.add(power)
         db.session.add(hero_power)
 
     try:

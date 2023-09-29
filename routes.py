@@ -1,23 +1,23 @@
-from flask import Flask, current_app, make_response, request, jsonify, g
+from flask import Flask, make_response, request, jsonify, g
 from models.hero import Hero, db
 from models.power import Power
-from models. heropower import HeroPower
-
-from sqlalchemy.exc import IntegrityError  
-import os 
+from models.heropower import HeroPower
+from flask_cors import CORS
+from sqlalchemy.exc import IntegrityError
+import os
 
 def create_app():
-    # create the flask app 
+    # Create the Flask app
     app = Flask(__name__)
-    # allow CORS for all routes 
+    # Allow CORS for all routes
+    CORS(app)
     app.config.from_object('config.Config')
     db.init_app(app)
 
-    # sample request hook 
+    # Sample request hook
     @app.before_request
     def app_path():
         g.path = os.path.abspath(os.getcwd())
-
     @app.route('/', methods=['GET'])
     def index():
         response_body = 'Welcome to the Superheroes API'

@@ -1,21 +1,18 @@
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_cors import CORS
+from routes import create_app
+from models.dbconfig import db
 
-app = Flask(__name__)
+# App initialization
+app = create_app()
+
+# Configure the FLASK migrations
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy()
-db.init_app(app)
-migrate = Migrate(app, db)
-CORS(app)
 
-@app.route('/')
-def home():
-    return 'Welcome to the Superheroes API'
+# Initialize Flask-Migrate
+migrate = Migrate(app, db)
+
 
 if __name__ == '__main__':
     app.run(port=5555)
