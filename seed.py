@@ -1,16 +1,13 @@
-from flask import Flask
-from models import db, Hero, Power, HeroPower
-from sqlalchemy.exc import IntegrityError
 from faker import Faker
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+from models.hero import Hero, db
+from models.power import Power
+from models.heropower import HeroPower
+from sqlalchemy.exc import IntegrityError
+from app import app, db
 
 fake = Faker()
-db.init_app(app)
 
-# Fcreate and add a hero with random data
+# Function to create and add a hero with random data
 def create_hero():
     name = fake.first_name()
     super_name = fake.first_name()
@@ -21,7 +18,7 @@ def create_hero():
 
     return hero
 
-#  create and add a power with random data
+# Function to create and add a power with random data
 def create_power():
     name = fake.word()
     description = fake.sentence()
@@ -40,7 +37,7 @@ def create_hero_power(hero, power):
 
     return hero_power
 
-# Create and add heroes, powers, and hero-power associations
+# Function to create and seed the database
 def seed_database():
     for _ in range(10):  
         hero = create_hero()
